@@ -25,16 +25,14 @@ class Tree
       return
     elsif arr.length > 1
       middle = arr.length / 2
+      left_arr = arr.slice(0..middle -1)
+      right_arr = arr.slice(middle + 1.. -1)
         
       new_node = Node.new(arr[middle])
-
-      left_arr = arr.slice(0..middle -1)
-      right_arr = arr.slice(middle.. -1)
       new_node.left_child = build_tree(left_arr)
       new_node.right_child = build_tree(right_arr)
-      puts new_node.data
     else
-      return arr
+      new_node = Node.new(arr)
     end
     new_node
   end
@@ -43,14 +41,21 @@ class Tree
     puts @root.right_child.data
   end
 
+  def find(control, current_node = @root)
+    
+    
+
+  end
+
+  def pretty_print(node = @root, prefix = '', is_left = true)
+    pretty_print(node.right_child, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right_child
+    puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
+    pretty_print(node.left_child, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left_child
+  end
+
 end
 
 arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 
 number_tree = Tree.new(arr)
-
-number_tree.build_tree
-number_tree.display_root
-
-
-
+number_tree.pretty_print 
