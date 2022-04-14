@@ -42,9 +42,14 @@ class Tree
   end
 
   def find(control, current_node = @root)
+    return current_node if current_node.nil? || current_node.data.equal?(control)
     
-    
-
+    #recursion starts
+    if control < current_node.data
+     find(control, current_node.left_child)
+    else 
+     find(control, current_node.right_child)
+    end
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
@@ -59,3 +64,4 @@ arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 
 number_tree = Tree.new(arr)
 number_tree.pretty_print 
+p number_tree.find(6345)
