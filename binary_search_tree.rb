@@ -25,12 +25,10 @@ class Tree
       return
     elsif arr.length > 1
       middle = arr.length / 2
-      left_arr = arr.slice(0..middle -1)
-      right_arr = arr.slice(middle + 1.. -1)
-        
+      
       new_node = Node.new(arr[middle])
-      new_node.left_child = build_tree(left_arr)
-      new_node.right_child = build_tree(right_arr)
+      new_node.left_child = build_tree(arr.slice(0..middle -1))
+      new_node.right_child = build_tree(arr.slice(middle + 1.. -1))
     else
       new_node = Node.new(arr)
     end
@@ -44,12 +42,16 @@ class Tree
   def find(control, current_node = @root)
     return current_node if current_node.nil? || current_node.data.equal?(control)
     
-    #recursion starts
     if control < current_node.data
      find(control, current_node.left_child)
     else 
      find(control, current_node.right_child)
     end
+  end
+
+  def insert(value, current_node = @root)
+  
+
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
@@ -64,4 +66,4 @@ arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 
 number_tree = Tree.new(arr)
 number_tree.pretty_print 
-p number_tree.find(6345)
+puts number_tree.find(6345)
