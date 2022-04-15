@@ -52,7 +52,6 @@ class Tree
   def insert(value, current_node = @root, previous_node = nil)
     if current_node == nil
       current_node = Node.new(value)
-
     elsif current_node.data > value
       if current_node.left_child == nil
         current_node.left_child = Node.new(value)
@@ -65,6 +64,24 @@ class Tree
       else
         insert(value, current_node.right_child, current_node)
       end
+    end
+  end
+
+  def delete(control, current_node = @root, previous_node = nil)
+    if control == current_node.data
+      if previous_node.left_child != nil && previous_node.left_child.data == control
+        previous_node.left_child.data = nil
+        return
+      else
+        previous_node.right_child.data = nil
+        return
+      end
+    end
+
+    if control < current_node.data
+      delete(control, current_node.left_child, current_node)
+    elsif control > current_node.data 
+      delete(control, current_node.right_child, current_node)
     end
   end
 
@@ -82,4 +99,6 @@ number_tree = Tree.new(arr)
 number_tree.pretty_print 
 puts number_tree.find(6345)
 number_tree.insert(11)
+number_tree.pretty_print
+number_tree.delete(11)
 number_tree.pretty_print
