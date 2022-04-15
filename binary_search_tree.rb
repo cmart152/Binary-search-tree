@@ -30,7 +30,7 @@ class Tree
       new_node.left_child = build_tree(arr.slice(0..middle -1))
       new_node.right_child = build_tree(arr.slice(middle + 1.. -1))
     else
-      new_node = Node.new(arr)
+      new_node = Node.new(arr[0])
     end
     new_node
   end
@@ -49,9 +49,23 @@ class Tree
     end
   end
 
-  def insert(value, current_node = @root)
-  
+  def insert(value, current_node = @root, previous_node = nil)
+    if current_node == nil
+      current_node = Node.new(value)
 
+    elsif current_node.data > value
+      if current_node.left_child == nil
+        current_node.left_child = Node.new(value)
+      else
+        insert(value, current_node.left_child)
+      end
+    else
+      if current_node.right_child == nil
+        current_node.right_child = Node.new(value)
+      else
+        insert(value, current_node.right_child, current_node)
+      end
+    end
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
@@ -67,3 +81,5 @@ arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 number_tree = Tree.new(arr)
 number_tree.pretty_print 
 puts number_tree.find(6345)
+number_tree.insert(11)
+number_tree.pretty_print
