@@ -1,20 +1,6 @@
-require 'pry-byebug'
-
-class Node
-  include Comparable
-
-  attr_accessor :data, :left_child, :right_child
-
-  def initialize(data, left = nil, right = nil)
-    @data = data
-    @left_child = left
-    @right_child = right
-  end
-
-end
+require_relative 'node'
 
 class Tree
-
   def initialize(arr)
     @arr = arr.sort.uniq
     @root = build_tree(@arr)
@@ -35,17 +21,23 @@ class Tree
     new_node
   end
 
-  def display_root
-    puts @root.right_child.data
+  def find(value, current_node = @root)
+    return current_node if current_node.nil? || current_node.data.equal?(value)
+    
+    if value < current_node.data
+     find(value, current_node.left_child)
+    else 
+     find(value, current_node.right_child)
+    end
   end
 
-  def find(control, current_node = @root)
-    return current_node if current_node.nil? || current_node.data.equal?(control)
-    
-    if control < current_node.data
-     find(control, current_node.left_child)
-    else 
-     find(control, current_node.right_child)
+  def find_parent(value, current_node = @root, previous_node = nil)
+    if value == current_node.data
+      previous_node.data
+    elsif value < current_node.data
+      find_parent(value, current_node.left_child, current_node)
+    else
+      find_parent(value, current_node.right_child, current_node)
     end
   end
 
@@ -67,9 +59,9 @@ class Tree
     end
   end
 
-  def delete(control, current_node = @root, previous_node = nil)
-    if control == current_node.data
-      if previous_node.left_child != nil && previous_node.left_child.data == control
+  def delete(value, current_node = @root, previous_node = nil)
+    if value == current_node.data
+      if previous_node.left_child != nil && previous_node.left_child.data == value
         previous_node.left_child.data = nil
         return
       else
@@ -78,10 +70,10 @@ class Tree
       end
     end
 
-    if control < current_node.data
-      delete(control, current_node.left_child, current_node)
-    elsif control > current_node.data 
-      delete(control, current_node.right_child, current_node)
+    if value < current_node.data
+      delete(value, current_node.left_child, current_node)
+    elsif value > current_node.data
+      delete(value, current_node.right_child, current_node)
     end
   end
 
@@ -92,13 +84,3 @@ class Tree
   end
 
 end
-
-arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
-
-number_tree = Tree.new(arr)
-number_tree.pretty_print 
-puts number_tree.find(6345)
-number_tree.insert(11)
-number_tree.pretty_print
-number_tree.delete(11)
-number_tree.pretty_print
