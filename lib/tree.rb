@@ -8,7 +8,7 @@ class Tree
   end
 
   def build_tree(arr = nil)
-    if arr == nil
+    if  arr[0] == nil
       return
     elsif arr.length > 1
       middle = arr.length / 2
@@ -60,42 +60,61 @@ class Tree
     end
   end
 
-  def delete_leaf(value, current_node = @root, previous_node = nil)
-    if value == current_node.data
-      if previous_node.left_child != nil && previous_node.left_child.data == value
-        previous_node.left_child.data = nil
-        return
-      else
-        previous_node.right_child.data = nil
-        return
-      end
-    end
-
-    if value < current_node.data
-      delete_leaf(value, current_node.left_child, current_node)
-    elsif value > current_node.data
-      delete_leaf(value, current_node.right_child, current_node)
-    end
-  end
-
   def delete(value)
     node = find(value)
     node_parent = find_parent(value)
 
     if node.right_child == nil && node.left_child == nil
-      node.data = nil
-    elsif node.right_child.data != nil && node.left_child.data == nil
+      delete_leaf(node, node_parent)
+    elsif node.left_child != nil && node.right_child != nil
+      delete_node_two_child(node, node_parent)
+    else
+      delete_node_one_child(node, node_parent)
+    end
+  end
+
+  def delete_leaf(node, node_parent)
+    if node.data > node_parent.data
+      node_parent.right_child = nil
+    else
+      node_parent.left_child = nil
+    end
+  end
+
+  def delete_node_one_child(node, node_parent)
+    if node.right_child != nil && node.left_child == nil
       if node.data > node_parent.data
         node_parent.right_child = node.right_child
       else
         node_parent.left_child = node.right_child
       end
-    elsif node.right_child.data == nil && node.left_child.data != nil
+    elsif node.right_child == nil && node.left_child != nil
       if node.data > node_parent.data
         node_parent.right_child = node.left_child
       else
         node_parent.left_child = node.left_child
       end
+    end
+  end
+
+  def delete_node_two_child(node, node_parent)
+    successor = find_successor(node.right_child)
+    successor_parent = find_parent(successor.data)
+    successor_parent.left_child = nil
+    successor.left_child = node.left_child
+    successor.right_child = node.right_child
+    if node.data > node_parent.data
+      node_parent.right_child = successor
+    else
+      node_parent.left_child = successor
+    end
+  end
+
+  def find_successor(node)
+    if node.left_child == nil
+      return node
+    else
+      find_successor(node.left_child)
     end
   end
 
