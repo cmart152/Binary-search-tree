@@ -1,4 +1,5 @@
 require_relative 'node'
+require 'pry-byebug'
 
 class Tree
   def initialize(arr)
@@ -33,7 +34,7 @@ class Tree
 
   def find_parent(value, current_node = @root, previous_node = nil)
     if value == current_node.data
-      previous_node.data
+      previous_node
     elsif value < current_node.data
       find_parent(value, current_node.left_child, current_node)
     else
@@ -42,7 +43,7 @@ class Tree
   end
 
   def insert(value, current_node = @root, previous_node = nil)
-    if current_node == nil
+    if current_node.data == nil
       current_node = Node.new(value)
     elsif current_node.data > value
       if current_node.left_child == nil
@@ -59,7 +60,7 @@ class Tree
     end
   end
 
-  def delete(value, current_node = @root, previous_node = nil)
+  def delete_leaf(value, current_node = @root, previous_node = nil)
     if value == current_node.data
       if previous_node.left_child != nil && previous_node.left_child.data == value
         previous_node.left_child.data = nil
@@ -71,9 +72,30 @@ class Tree
     end
 
     if value < current_node.data
-      delete(value, current_node.left_child, current_node)
+      delete_leaf(value, current_node.left_child, current_node)
     elsif value > current_node.data
-      delete(value, current_node.right_child, current_node)
+      delete_leaf(value, current_node.right_child, current_node)
+    end
+  end
+
+  def delete(value)
+    node = find(value)
+    node_parent = find_parent(value)
+
+    if node.right_child == nil && node.left_child == nil
+      node.data = nil
+    elsif node.right_child.data != nil && node.left_child.data == nil
+      if node.data > node_parent.data
+        node_parent.right_child = node.right_child
+      else
+        node_parent.left_child = node.right_child
+      end
+    elsif node.right_child.data == nil && node.left_child.data != nil
+      if node.data > node_parent.data
+        node_parent.right_child = node.left_child
+      else
+        node_parent.left_child = node.left_child
+      end
     end
   end
 
