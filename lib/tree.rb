@@ -118,6 +118,33 @@ class Tree
     end
   end
 
+
+
+
+  def level_order(level_arr = [@root], keep_arr = [], &block)
+    if level_arr[0] == nil && keep_arr != []
+     return keep_arr
+    elsif level_arr[0] == nil && keep_arr ==[]
+      return
+    end
+
+    level_arr << level_arr[0].left_child if level_arr[0].left_child != nil
+    level_arr << level_arr[0].right_child if level_arr[0].right_child != nil
+    
+    if block_given?
+      yield(level_arr.shift)
+    else
+      keep_arr << level_arr.shift.data
+    end
+
+    level_order(level_arr, keep_arr, &block)
+  end
+
+
+
+
+
+
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right_child, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right_child
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
