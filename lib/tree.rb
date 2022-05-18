@@ -221,6 +221,14 @@ class Tree
     return counter
   end
 
+  def balanced?
+    left = height(@root.left_child.data)
+    right = height(@root.right_child.data)
+    number = right - left
+
+    number.between?(-1, 1) ? "Balanced" : "Not balanced"
+  end
+
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right_child, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right_child
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
