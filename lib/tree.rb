@@ -118,9 +118,6 @@ class Tree
     end
   end
 
-
-
-
   def level_order(level_arr = [@root], keep_arr = [], &block)
     if level_arr[0] == nil && keep_arr != []
      return keep_arr
@@ -140,11 +137,66 @@ class Tree
     level_order(level_arr, keep_arr, &block)
   end
 
+  def in_order(current_node = @root, keep_arr = [], &block)
+    if current_node != nil
+      in_order(current_node.left_child, keep_arr, &block)
+    else
+      return
+    end
+   
+    if block_given?
+      yield(current_node.data)
+    elsif current_node != nil
+      keep_arr << current_node.data
+    end
 
+    in_order(current_node.right_child, keep_arr, &block)
 
+    return keep_arr if block_given? == false
+  end
 
+  def pre_order(current_node = @root, keep_arr = [], &block)
+    if current_node != nil
+      if block_given?
+        yield(current_node.data)
+      else
+        keep_arr << current_node.data
+      end
+    else
+      return
+    end
 
+    pre_order(current_node.left_child, keep_arr, &block)
+    pre_order(current_node.right_child, keep_arr, &block)
 
+    if block_given?
+      return
+    else
+      return keep_arr
+    end
+  end
+
+  def post_order(current_node = @root, keep_arr = [], &block)
+    if current_node != nil
+      post_order(current_node.left_child, keep_arr, &block)
+      post_order(current_node.right_child, keep_arr, &block)
+    else
+      return
+    end
+
+    if block_given?
+      yield(current_node.data)
+    elsif current_node != nil
+      keep_arr << current_node.data
+    end
+
+    if block_given?
+      return
+    else 
+      return keep_arr
+    end
+  end
+  
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right_child, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right_child
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
