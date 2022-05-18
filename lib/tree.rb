@@ -196,7 +196,19 @@ class Tree
       return keep_arr
     end
   end
-  
+
+  def height(node)
+    node = find(node)
+    counter = 0
+
+    while node != nil
+      counter += 1
+      node = node.left_child
+    end
+
+    return counter
+  end
+
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right_child, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right_child
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
