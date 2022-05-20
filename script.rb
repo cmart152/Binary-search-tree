@@ -13,3 +13,4 @@ number_tree.pretty_print
 p number_tree.balanced?
 number_tree.rebalance
 number_tree.pretty_print
+p number_tree.balanced?
