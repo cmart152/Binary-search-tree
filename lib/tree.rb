@@ -209,6 +209,16 @@ class Tree
     return counter
   end
 
+  def unbalanced_height(node, count = 0)
+    if node != nil
+      unbalanced_height(node.left_child, count)
+      unbalanced_height(node.right_child, count)
+    else
+      return
+    end
+    return 1
+  end
+
   def depth(node)
     node = find(node)
     counter = 0
@@ -222,11 +232,24 @@ class Tree
   end
 
   def balanced?
-    left = height(@root.left_child.data)
-    right = height(@root.right_child.data)
+    left = unbalanced_height(@root.left_child)
+    right = unbalanced_height(@root.right_child)
     number = right - left
 
     number.between?(-1, 1) ? "Balanced" : "Not balanced"
+  end
+
+  def rebalance(node = @root, arr = [])
+    if node != nil
+      rebalance(node.left_child, arr)
+      rebalance(node.right_child, arr)
+    else
+      return
+    end
+
+    arr << node.data
+
+    self.initialize(arr)
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
